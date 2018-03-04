@@ -17,12 +17,12 @@ resources:
 - name: output
   type: s3
   source:
-    endpoint:
+    endpoint: http://minio:9000
     bucket: outputs
     disable_ssl: true
     skip_ssl_verification: true
-    access_key_id: ACCESS-KEY
-    secret_access_key: SECRET
+    access_key_id: minio
+    secret_access_key: miniostorage
 
 jobs:
 - name: frontend-test
@@ -33,7 +33,7 @@ jobs:
     file: frontend/ci/tasks/unit.yml
   - put: output
     params:
-      file: frontend/report
+      dir: frontend/report
       name: report
 
 - name: api-test
@@ -42,3 +42,23 @@ jobs:
     trigger: true
   - task: api-unit
     file: api/ci/tasks/unit.yml
+
+- name: integreation-test
+  plan:
+  - aggregate:
+    - get: frontend
+      trigger: true
+      passed: [frontend-test]
+    - get: api
+      trigger: true
+      passed: [api-test]
+  - task: say-hello
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: alpine}
+      run:
+        path: echo
+        args: [Integration test success (dummy)!!"]
+

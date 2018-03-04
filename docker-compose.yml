@@ -39,9 +39,6 @@ services:
 
   minio:
     image: minio/minio
-
-  minio:
-    image: minio/minio
     volumes:
     - outputs:/export
     ports: ["9000:9000"]
