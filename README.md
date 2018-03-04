@@ -39,8 +39,29 @@ $ fly --target learning login --concourse-url http://localhost:8080
 
 以後、```--target （-t）learning```はこのConcourseに対して何かする場合は必須になります。
 
+#### sync
+
+```sh
+$ fly --target learning sync
+```
+
+flyコマンドを対象のConcourseで使える最新版にアップデートする
+
 #### set-pipeline
 
 ```sh
 $ fly -t learning set-pipeline -p hello-world -c ./pipelines/hello.yml
 ```
+
+パイプラインの登録
+
+#### unpause-pipeline
+
+#### unpause-job
+
+#### destroy-pipline
+```sh
+$ fly -t example destroy-pipeline --pipeline my-pipeline
+```
+
+パイプラインの破棄

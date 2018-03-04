@@ -1,0 +1,44 @@
+resource_types:
+
+resources:
+
+- name: frontend
+  type: git
+  source:
+    uri: https://github.com/igrs/concourse-example-frontend.git
+    branch: master
+
+- name: api
+  type: git
+  source:
+    uri: https://github.com/igrs/concourse-example-api.git
+    branch: master
+
+- name: output
+  type: s3
+  source:
+    endpoint:
+    bucket: outputs
+    disable_ssl: true
+    skip_ssl_verification: true
+    access_key_id: ACCESS-KEY
+    secret_access_key: SECRET
+
+jobs:
+- name: frontend-test
+  plan:
+  - get: frontend
+    trigger: true
+  - task: fr-unit
+    file: frontend/ci/tasks/unit.yml
+  - put: output
+    params:
+      file: frontend/report
+      name: report
+
+- name: api-test
+  plan:
+  - get: api
+    trigger: true
+  - task: api-unit
+    file: api/ci/tasks/unit.yml
