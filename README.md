@@ -17,6 +17,7 @@ dockerバージョンの場合/etc/hostsに以下を追記しておく
 ```sh
 $ cd path/to/project
 $ ./setup.sh #key生成
+$ export CONCOURSE_EXTERNAL_URL=http://concourse-web:8080
 $ docker-compose up # -d optionだと何故かworkerが起動しない。。
 ```
 
