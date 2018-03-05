@@ -56,45 +56,21 @@ $ fly -t learning set-pipeline -p hello-world -c ./pipelines/hello.yml
 パイプラインの登録
 
 #### unpause-pipeline
+```sh
+$ fly -t learning unpause-pipeline -p hello-world
+```
+パイプラインの停止
 
-#### unpause-job
+
+#### pause-job
+```sh
+$ fly -t learning pause-pipeline -p hello-world
+```
+パイプラインの再開
 
 #### destroy-pipline
 ```sh
-$ fly -t example destroy-pipeline --pipeline my-pipeline
+$ fly -t learning destroy-pipeline --p hello-world
 ```
-
 パイプラインの破棄
 
-
-
-
-
-
-
-Resources
-
-Gitなどのリポジトリ、アーカイブ、Resource、タイマーなどを抽象化して扱う。
-
-例
-* git
-* hg
-* docker-image
-* s3
-* time -- インターバルなど
-* etc
-
-リソースが入力や出力の対象になる
-
-Jobs
-
-パイプラインの動作、リソースの使用方法などのすべての可視化方法を取り扱う
-
-* どのような環境で（仮想コンテナ）で実行するか
-* どのリソースをインプットとして使用するか
-* どのようなタスクを実行するか
-* どのリソースにアウトプットするか
-
-Tasks
-Jobの子要素で動作とその実行環境を規定する
-それぞれのリソースにyamlを配備してtask単位で実行したりできます。
