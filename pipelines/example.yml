@@ -43,22 +43,68 @@ jobs:
   - task: api-unit
     file: api/ci/tasks/unit.yml
 
-- name: integreation-test
+# Dummy integration
+- name: integration-test
   plan:
   - aggregate:
     - get: frontend
       trigger: true
-      passed: [frontend-test]
+      passed:
+      - frontend-test
     - get: api
       trigger: true
-      passed: [api-test]
-  - task: say-hello
+      passed:
+      - api-test
+  - task: integration-test
     config:
       platform: linux
       image_resource:
         type: docker-image
-        source: {repository: alpine}
+        source:
+          repository: alpine
+      outputs:
+      - name: reports
       run:
-        path: echo
-        args: [Integration test success (dummy)!!"]
+        path: sh
+        args:
+        - -exc
+        - |
+          echo "Integration test success" > reports/integration-report.html
+          find /tmp -name integration-report.html
+  - put: bucket
+    params:
+      file: reports/*-report.html
+      acl: public-read
 
+# Dummy Deploy
+- name: deploy
+  plan:
+  - aggregate:
+    - get: frontend
+      trigger: true
+      passed:
+      - integration-test
+    - get: api
+      trigger: true
+      passed:
+      - integration-test
+  - task: deploy
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: alpine
+      outputs:
+      - name: reports
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          echo "Deploy test success" > reports/deploy-report.html
+          find /tmp -name deploy-report.html
+  - put: bucket
+    params:
+      file: reports/*-report.html
+      acl: public-read
