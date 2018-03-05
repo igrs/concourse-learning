@@ -42,6 +42,10 @@ jobs:
     trigger: true
   - task: api-unit
     file: api/ci/tasks/unit.yml
+  - put: bucket
+    params:
+      file: reports/*-report.html
+      acl: public-read
 
 # Dummy integration
 - name: integration-test
