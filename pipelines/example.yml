@@ -14,16 +14,16 @@ resources:
     uri: https://github.com/igrs/concourse-example-api.git
     branch: master
 
-#- name: bucket
-#  type: s3
-#  source:
-#    endpoint: http://minio:9000
-#    bucket: outputs
-#    disable_ssl: true
-#    skip_ssl_verification: true
-#    access_key_id: minio
-#    secret_access_key: miniostorage
-
+- name: bucket
+  type: s3
+  source:
+    endpoint: http://minio:9000
+    bucket: outputs
+    disable_ssl: true
+    skip_ssl_verification: true
+    access_key_id: minio
+    secret_access_key: miniostorage
+    regexp: "reports/(.*)-report.html"
 jobs:
 - name: frontend-test
   plan:
@@ -31,10 +31,10 @@ jobs:
     trigger: true
   - task: fr-unit
     file: frontend/ci/tasks/unit.yml
-  #- put: bucket
-  #  params:
-  #    #file: report/test-report.html
-  #    acl: public-read
+  - put: bucket
+    params:
+      file: reports/*-report.html
+      acl: public-read
 
 - name: api-test
   plan:
